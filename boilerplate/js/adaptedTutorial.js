@@ -29,7 +29,19 @@ function getData(){
             return response.json();
     })
     .then(function(json){
+        var geojsonMarkerOptions = {
+            radius: 8,
+            fillColor: "#ff7800",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+        
         L.geoJSON(json, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            },        
             onEachFeature: onEachFeature
             
         }).addTo(map);
@@ -38,4 +50,3 @@ function getData(){
 //the line below this one activates all the stuff above this line once the DOM hath loaded
 document.addEventListener('DOMContentLoaded',createMap)
 
-//at the moment I am at an absolute loss for how to make the feature points into dots. I might just ignore it in favor of the (probably more important) leaflet data points portion lol
