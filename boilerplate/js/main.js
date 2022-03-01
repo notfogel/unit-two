@@ -60,36 +60,44 @@ function onEachFeature(feature, layer) {
         layer.bindPopup(popupContent);
     };
 };
-//now it's time to make some symbolz
-function createPropSymbols(data){
-    
-    var attribute = "num_bills_2022";
-
-    
-    //let's cre8 some marker optionz
-    var geojsonMarkerOptions = {
-        radius: 8,
+//hoo boy here weeee goooo (it's Air Jordan on my flip flops, and...)
+function pointToLayer(feature, latlng){
+    //determine hwhitch attribute to visual-eyes w/ proportional symbolz
+    var attribute = "num_bills_2022"
+    //cre8 marker optionz
+    var options = {
         fillColor: "#ff7800",
         color: "#000",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8
     };
-    //cre8 leaflet geojson layerrr & add it 2 tha map
-    L.geoJSON(data, {
-        pointToLayer: function(feature, latlng){
-            //for each feature, determine its value 4 tha selected attribute
-            var attValue = Number(feature.properties[attribute]);
+    //forEachFeature, determine its value for teh selected_attribUte
+    var attValue = Number(feature.properties[attribute]);
 
-            //give each feature's birble marker a radius based on its attValue
-            geojsonMarkerOptions.radius = calcPropRadius(attValue);
-            
-            //create birbleMarkerz
-            return L.circleMarker(latlng,geojsonMarkerOptions);
-        }
-    }).addTo(map);
+    //give each feature's birble marker a radius based on its attValue
+    options.radius = calcPropRadius(attValue);
+
+    //cre8 birble marker layer
+    var layer = L.circleMarker(latlng, options);
+
+    //build popup content strng
+    var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p><p><b>" + attribute + ":</b> " + feature.properties[attribute] + "</p>";
+
+    //bind the popup to the birble marker
+    layer.bindPopup(popupContent);
+
+    //returm birble marker to the L.geoJSON pointToLayer option
+    return layer;
 };
-
+//now it's time to make some symbolz
+function createPropSymbols(data){
+    //cre8 a leaflet geojson layer & add it 2 tha mapppp
+    L.geoJSON(data, {
+        pointToLayer: pointToLayer
+    }).addTo(map);
+    
+};
 
 function getData(){
     fetch("data/antitranslaws_15gap_17gap.geojson")
