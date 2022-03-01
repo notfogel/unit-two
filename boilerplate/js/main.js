@@ -98,6 +98,22 @@ function createPropSymbols(data){
     }).addTo(map);
     
 };
+//sequence ctls baby!!!
+function createSequenceControls(){
+    //let's spawn a range input element (aka slider)
+    var slider = "<input class='range-slider' type='range'></input>";
+    document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
+    //I only have 6 timestaps for now so max set to 5 instead of 6 as in example
+    document.querySelector('.range-slider').max = 5;
+    document.querySelector('.range-slider').min = 0;
+    document.querySelector('.range-slider').value = 0;
+    document.querySelector('.range-slider').step = 1;
+    //let's add some buttons!!!!!
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
+
+};
+
 
 function getData(){
     fetch("data/antitranslaws_15gap_17gap.geojson")
@@ -109,6 +125,7 @@ function getData(){
         //minValue = calculateMinValue(json);
         //call that fxn and create those proportional symbolz!
         createPropSymbols(json);
+        createSequenceControls();
     })        
 };
 //the line below this one activates all the stuff above this line once the DOM hath loaded
