@@ -82,7 +82,7 @@ function pointToLayer(feature, latlng){
     var layer = L.circleMarker(latlng, options);
 
     //build popup content strng
-    var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p><p><b>" + attribute + ":</b> " + feature.properties[attribute] + "</p>";
+    var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p><p><b>" + "Anti-Trans Bills Proposed in 2022 (thusfar)" + ":</b> " + feature.properties[attribute] + "</p>";
 
     //bind the popup to the birble marker
     layer.bindPopup(popupContent);
