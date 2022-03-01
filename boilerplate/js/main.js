@@ -1,11 +1,11 @@
 var map;
-var minValue;
+var minValue = 1
 
 function createMap(){
     //the creation of map
     map = L.map('map', {
         center: [40,-98.5],
-        zoom: 3
+        zoom: 4
     });
     //adding OSM tilelayerrrrr
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -16,6 +16,7 @@ function createMap(){
     getData(map);
 };
 //creating a minValue fxn for proportional scaling 
+/* commenting this fxn out for now til I can get this loop to function bc 0-values are messing it up rn
 function calculateMinValue(data){
     //creation of empty array for to store all data valuez
     var allValues = [];
@@ -31,11 +32,12 @@ function calculateMinValue(data){
             allValues.push(value);
         }
     }
+    console.log(allValues);
     //get min value of our array
     var minValue = Math.min(...allValues)
     console.log(minValue)
     return minValue;
-}
+} */
 //now it's time to calculate the radius of each and every proportional symbol
 function calcPropRadius(attValue){
     //constant factor adjusts symbol sizes evenly
@@ -95,8 +97,8 @@ function getData(){
             return response.json();
     })
     .then(function(json){
-        //calculate minimum data value
-        minValue = calculateMinValue(json);
+        //calculate minimum data value (not yet tho since loop still bunk)
+        //minValue = calculateMinValue(json);
         //call that fxn and create those proportional symbolz!
         createPropSymbols(json);
     })        
