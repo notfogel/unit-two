@@ -5,7 +5,7 @@ function createMap(){
     //the creation of map
     map = L.map('map', {
         center: [40,-98.5],
-        zoom: 4
+        zoom: 3.25
     });
     //adding OSM tilelayerrrrr
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -82,7 +82,7 @@ function pointToLayer(feature, latlng, attributes){
     var layer = L.circleMarker(latlng, options);
 
     //build popup content strng
-    var popupContent = "<p><b>States:</b> " + feature.properties.State + "</p><p><b>" + "Anti-Trans Bills Proposed" + ":</b> " + feature.properties[attribute] + "</p>";
+    var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p><p><b>" + "Anti-Trans Bills Proposed in " + attribute + ": </b> " + feature.properties[attribute] + "</p>";
 
     //bind the popup to the birble marker
     layer.bindPopup(popupContent);
@@ -177,21 +177,22 @@ function createSequenceControls(attributes){
 //update the symbols as the index changes with the slideyguy
 function updatePropSymbols(attribute){
     map.eachLayer(function(layer){
-        if (layer.feature && layer.feature.properties[attribute]){
+        if (layer.feature){
             //access feature properties
             var props = layer.feature.properties;
+            console.log(props)
             //update each feature's radius based on new attValues
             var radius = calcPropRadius(props[attribute]);
             layer.setRadius(radius);
             //add state to popup content string
-            var popupContent = "<p><b>State:</b> " + props.State + "</p>";
+            var popupContent = "<p><b>State:</b> " + props.State + "</p><p><b>" + "Anti-Trans Bills Proposed in " + attribute + ": </b>" + props[attribute] + "</p>";
             //this stuff below here needs to be tweaked
             //add formatted attribute to panel content string
             //problems: for some reason once I added this section (186-197) most of the points stopped moving with the index
             //in fact, it seems like only AL is updating? which means something with a loop somewhere must be broken?
             //problems: the popups do not update when I scroll between (i wonder if these 2 things are related (probably))
-            popupContent += "<p><b>Anti-Trans Bills Proposed " + feature.properties.State + ":</b> " + props[attribute] + "</p>";
-
+            //popupContent +=  "<p><b>States:</b> " + props.State + "</p><p><b>" + "Anti-Trans Bills Proposed" + ":</b> " + feature.properties[attribute] + "</p>";
+             
             //update popup content            
             popup = layer.getPopup();            
             popup.setContent(popupContent).update();            
