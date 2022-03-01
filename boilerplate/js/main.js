@@ -136,13 +136,13 @@ function createSequenceControls(attributes){
     document.querySelector('.range-slider').value = 0;
     document.querySelector('.range-slider').step = 1;
     //let's add some buttons!!!!!
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
-    //these simply must be fixed they are massive, also I'll have to do the CC attribution
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse (by Saepul Nahwan under CC)</button>');
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward (by Saepul Nahwan under CC)</button>');
+    // have to do the CC attribution
     document.querySelector('#reverse').insertAdjacentHTML('beforeend','<img src="img/reverse.png">'); 
     document.querySelector('#forward').insertAdjacentHTML('beforeend','<img src="img/forward.png">');
 
-    //Step 5: click listener for buttons (my buttons still suck as of rn lol)
+    //Step 5: click listener for buttons 
     document.querySelectorAll('.step').forEach(function(step){
         step.addEventListener("click", function(){
             var index = document.querySelector('.range-slider').value;
