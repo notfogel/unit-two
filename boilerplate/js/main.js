@@ -80,9 +80,9 @@ function pointToLayer(feature, latlng, attributes){
 
     //cre8 birble marker layer
     var layer = L.circleMarker(latlng, options);
-
+    var year = attribute.split("_")[1];
     //build popup content strng
-    var popupContent = "<p><b>State:</b> " + feature.properties.State + "</p><p><b>" + "Anti-Trans Bills Proposed in " + attribute + ": </b> " + feature.properties[attribute] + "</p>";
+    var popupContent = createPopupContent(feature.properties, attribute);
 
     //bind the popup to the birble marker
     layer.bindPopup(popupContent);
@@ -113,7 +113,7 @@ function processData(data){
     //push each attribute name into attributes array
     for (var attribute in properties){
         //only take attributes with population values
-        if (attribute.indexOf("num") > -1){
+        if (attribute.indexOf("bills") > -1){
             attributes.push(attribute);
         };
     };
@@ -184,14 +184,10 @@ function updatePropSymbols(attribute){
             //update each feature's radius based on new attValues
             var radius = calcPropRadius(props[attribute]);
             layer.setRadius(radius);
+
+            var year = attribute.split("_")[1];
             //add state to popup content string
-            var popupContent = "<p><b>State:</b> " + props.State + "</p><p><b>" + "Anti-Trans Bills Proposed in " + attribute + ": </b>" + props[attribute] + "</p>";
-            //this stuff below here needs to be tweaked
-            //add formatted attribute to panel content string
-            //problems: for some reason once I added this section (186-197) most of the points stopped moving with the index
-            //in fact, it seems like only AL is updating? which means something with a loop somewhere must be broken?
-            //problems: the popups do not update when I scroll between (i wonder if these 2 things are related (probably))
-            //popupContent +=  "<p><b>States:</b> " + props.State + "</p><p><b>" + "Anti-Trans Bills Proposed" + ":</b> " + feature.properties[attribute] + "</p>";
+            var popupContent = createPopupContent(props, attribute);
              
             //update popup content            
             popup = layer.getPopup();            
@@ -200,6 +196,17 @@ function updatePropSymbols(attribute){
         };
     });
 };
+
+function createPopupContent(properties, attribute){
+    //add state to popup content string
+    var popupContent = "<p><b>State </b>" + properties.State + "</p>";
+    //add formatted attribute to panel content string
+    var year = attribute.split("_")[1];
+    popupContent += "<p><b>Anti-Trans Bills Proposed in " + year + ": </b>" + properties[attribute];
+
+    return popupContent;
+}
+
 
 function getData(){
     fetch("data/antitranslaws_15gap_17gap.geojson")
