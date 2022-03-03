@@ -38,6 +38,7 @@ function calculateMinValue(data){
     console.log(minValue)
     return minValue;
 } */
+
 //now it's time to calculate the radius of each and every proportional symbol
 function calcPropRadius(attValue){
     //constant factor adjusts symbol sizes evenly
@@ -47,19 +48,6 @@ function calcPropRadius(attValue){
     return radius;
 };
 
-
-
-function onEachFeature(feature, layer) {
-    //no property named popupContent; instead, create html string with all properties
-    var popupContent = "";
-    if (feature.properties) {
-        //loop to add feature property names and values to html string
-        for (var property in feature.properties){
-            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
-        }
-        layer.bindPopup(popupContent);
-    };
-};
 //hoo boy here weeee goooo (it's Air Jordan on my flip flops, and...)
 function pointToLayer(feature, latlng, attributes){
     //determine hwhitch attribute to visual-eyes w/ proportional symbolz
@@ -82,10 +70,10 @@ function pointToLayer(feature, latlng, attributes){
     var layer = L.circleMarker(latlng, options);
     var year = attribute.split("_")[1];
     //build popup content strng
-    var popupContent = createPopupContent(feature.properties, attribute);
+    var popupContent = new PopupContent(feature.properties, attribute);
 
     //bind the popup to the birble marker
-    layer.bindPopup(popupContent);
+    layer.bindPopup(popupContent.formatted);
 
     //returm birble marker to the L.geoJSON pointToLayer option
     return layer;
@@ -187,25 +175,34 @@ function updatePropSymbols(attribute){
 
             var year = attribute.split("_")[1];
             //add state to popup content string
-            var popupContent = createPopupContent(props, attribute);
+            var popupContent = new PopupContent(props, attribute);
              
             //update popup content            
             popup = layer.getPopup();            
-            popup.setContent(popupContent).update();            
+            popup.setContent(popupContent.formatted).update();            
             
         };
     });
 };
 
-function createPopupContent(properties, attribute){
+function PopupContent(properties, attribute){
+    this.properties = properties;
+    this.attribute = attribute;
+    this.year = attribute.split("_")[1];
+    this.billz = this.properties[attribute];
+    this.formatted = "<p><b>State:</b> " + this.properties.State + "</p><p><b>Anti-Trans Bills Proposed in " + this.year + ": </b> " + this.billz + " </p>";
+    
+    
+    
+    /*
     //add state to popup content string
     var popupContent = "<p><b>State </b>" + properties.State + "</p>";
     //add formatted attribute to panel content string
     var year = attribute.split("_")[1];
     popupContent += "<p><b>Anti-Trans Bills Proposed in " + year + ": </b>" + properties[attribute];
 
-    return popupContent;
-}
+    return popupContent; */
+};
 
 
 function getData(){
