@@ -130,7 +130,8 @@ function createSequenceControls(attributes){
     document.querySelector('#reverse').insertAdjacentHTML('beforeend','<img src="img/reverse.png">'); 
     document.querySelector('#forward').insertAdjacentHTML('beforeend','<img src="img/forward.png">');
 
-    //Step 5: click listener for buttons 
+    //Step 5: click listener for buttons  
+    /*
     document.querySelectorAll('.step').forEach(function(step){
         step.addEventListener("click", function(){
             var index = document.querySelector('.range-slider').value;
@@ -150,8 +151,9 @@ function createSequenceControls(attributes){
             document.querySelector('.range-slider').value = index; 
 
             updatePropSymbols(attributes[index]);
-        })
-    })
+            
+        }) 
+    }) */
     
     //Step 5: input listener for slider (we love the slider tho!!!!)
     document.querySelector('.range-slider').addEventListener('input', function(){            
@@ -159,16 +161,66 @@ function createSequenceControls(attributes){
         
         updatePropSymbols(attributes[index]);
     });
+    var SequenceControl = L.Control.extend({
+        options: {
+            position: 'bottomleft'
+        },
+        onAdd: function() {
+            //create the control container div with a particular class namw
+            var container = L.DomUtil.create('div', 'sequence-control-container');
+            //create range input element (slider)
+            container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range">')
+            //add skip buttons
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse (by Saepul Nahwan under CC) "><img src="img/reverse.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward (by Saepul Nahwan under CC) "><img src="img/forward.png"></button>');
+            //disable any mouse event listeners for the container
+            L.DomEvent.disableClickPropagation(container);
+            //initialize other DOM elements
+            return container;
+        }
+    });
+    map.addControl(new SequenceControl());  //add listenerz after adding control
+    
+    //more listenerz!! this shit should sequence! come on javascript, LISTEN and LEARN!!!
+    //ok so everything works fine EXCEPT the new slider bar doesn't make the data shift in the way the old one did
+    //BUT, when the reverse/forward buttons are clicked, the data does shift and the new slider bar along with it
+    //I think line 212 may be the key to this ("updatePropSymbols(attributes[index])")
+    //so this is something I'll have to figure out (or delete lol) but otherwise, doin alright and made it thru Lesson 2 stage II
+    document.querySelector('.range-slider').max = 5;
+    document.querySelector('.range-slider').min = 0;
+    document.querySelector('.range-slider').value = 0;
+    document.querySelector('.range-slider').step = 1;
 
+    var steps = document.querySelectorAll('.step');
 
+    steps.forEach(function(step){
+        step.addEventListener("click", function(){
+            var index = document.querySelector('.range-slider').value;
+            //increment! or decrement! just no excrement!
+            if (step.id == 'forward'){
+                index++;
+                //make this sequence wrap arround to 1st attribute
+                index = index > 5 ? 0 : index;
+            } else if (step.id == 'reverse'){
+                index--;
+                //wrap to last attruibute again
+                index = index < 0 ? 5 : index;
+            };
+            //upd8 slider
+            document.querySelector('.range-slider').value = index; //so this line seems to be making the slider move w/ the buttonz. but won't let update by using slider
+            //pass new att to update symbolz
+            updatePropSymbols(attributes[index]);
+        });
+    });
 };
+
 //update the symbols as the index changes with the slideyguy
 function updatePropSymbols(attribute){
     map.eachLayer(function(layer){
         if (layer.feature){
             //access feature properties
             var props = layer.feature.properties;
-            console.log(props)
+            //console.log(props)
             //update each feature's radius based on new attValues
             var radius = calcPropRadius(props[attribute]);
             layer.setRadius(radius);
@@ -176,13 +228,47 @@ function updatePropSymbols(attribute){
             var year = attribute.split("_")[1];
             //add state to popup content string
             var popupContent = new PopupContent(props, attribute);
-             
+            
             //update popup content            
             popup = layer.getPopup();            
             popup.setContent(popupContent.formatted).update();            
             
         };
-    });
+    }); 
+//creating a temporal legend!
+    function createLegend(attributes){
+        var LegendControl = L.Control.extend({
+            options: {
+                position: 'bottomright'
+            },
+            onAdd: function(){
+                //cre8 control container w/ a particular clasz name
+                var container = L.DomUtil.create('div', 'legend-control-container');
+                //script creating temporal legend... below
+                var legend = "<input class='temporal-legend' type='range'></input>";
+                container.insertAdjacentHTML('beforeend', '<input class="temporal-legend" type="range">')
+                container.innerHTML = '<p class="temporal-legend">Anti-Trans Legislation in  <span class="year">2022</span></p>';
+                var index = document.querySelector('.range-slider').value;
+            
+                //increment or decrement depending on button clicked
+                if (step.id == 'forward'){
+                    index++;
+                    //Step 7: if past the last attribute, wrap around to first attribute
+                    index = index > 5 ? 0 : index;
+                } else if (step.id == 'reverse'){
+                    index--;
+                    //Step 7: if past the first attribute, wrap around to last attribute
+                    index = index < 0 ? 5 : index;
+                };
+                console.log(index)
+                container.innerHTML += index
+                //this line below actually CREATES the darn thing (in theory)
+                return container;
+            }
+        });
+        map.addControl(new LegendControl());
+
+};
 };
 
 function PopupContent(properties, attribute){

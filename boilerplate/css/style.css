@@ -11,6 +11,25 @@
     text-align: center;
     line-height: 42px;
 }
+.sequence-control-container {  
+    width: 350px;  
+    height: 30px;  
+    background-color: rgba(255,255,255,0.8);  
+    padding: 10px;  
+    line-height: 35px;  
+    text-align: start;  
+    border: solid gray 1px;  
+}  
+.legend-control-container {  
+    width: 350px;  
+    height: 30px;  
+    background-color: rgba(255,255,255,0.8);  
+    padding: 10px;  
+    line-height: 35px;  
+    text-align: start;  
+    border: solid gray 1px;  
+}  
+
 .range-slider {
     width: 55%;
 }
