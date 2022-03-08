@@ -212,6 +212,12 @@ function createSequenceControls(attributes){
             updatePropSymbols(attributes[index]);
         });
     });
+    document.querySelector('.range-slider').addEventListener('input', function(){            
+        var index = this.value;
+        
+        updatePropSymbols(attributes[index]);
+    });
+
 };
 
 //update the symbols as the index changes with the slideyguy
@@ -235,42 +241,27 @@ function updatePropSymbols(attribute){
             
         };
     }); 
+
+};
 //creating a temporal legend!
-    function createLegend(attributes){
-        var LegendControl = L.Control.extend({
-            options: {
-                position: 'bottomright'
-            },
-            onAdd: function(){
-                //cre8 control container w/ a particular clasz name
-                var container = L.DomUtil.create('div', 'legend-control-container');
-                //script creating temporal legend... below
-                var legend = "<input class='temporal-legend' type='range'></input>";
-                container.insertAdjacentHTML('beforeend', '<input class="temporal-legend" type="range">')
-                container.innerHTML = '<p class="temporal-legend">Anti-Trans Legislation in  <span class="year">2022</span></p>';
-                var index = document.querySelector('.range-slider').value;
+function createLegend(attributes){
+    var LegendControl = L.Control.extend({
+        options: {
+            position: 'bottomright'
+        },
+        onAdd: function(){
+            //cre8 control container w/ a particular clasz name
+            var container = L.DomUtil.create('div', 'legend-control-container');
             
-                //increment or decrement depending on button clicked
-                if (step.id == 'forward'){
-                    index++;
-                    //Step 7: if past the last attribute, wrap around to first attribute
-                    index = index > 5 ? 0 : index;
-                } else if (step.id == 'reverse'){
-                    index--;
-                    //Step 7: if past the first attribute, wrap around to last attribute
-                    index = index < 0 ? 5 : index;
-                };
-                console.log(index)
-                container.innerHTML += index
-                //this line below actually CREATES the darn thing (in theory)
-                return container;
-            }
-        });
-        map.addControl(new LegendControl());
+            container.innerHTML = '<p class="temporal-legend">Anti-Trans Legislation in  <span class="year">2022</span></p>';
+          
+            //this line below actually CREATES the darn thing (in theory) */
+            return container;
+        }
+    });
+    map.addControl(new LegendControl());
 
 };
-};
-
 function PopupContent(properties, attribute){
     this.properties = properties;
     this.attribute = attribute;
@@ -306,6 +297,7 @@ function getData(){
         //call that fxn and create those proportional symbolz!
         createPropSymbols(json, attributes);
         createSequenceControls(attributes);
+        createLegend(attributes);
     })        
 };
 //the line below this one activates all the stuff above this line once the DOM hath loaded
