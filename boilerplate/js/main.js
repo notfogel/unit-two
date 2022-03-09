@@ -126,52 +126,7 @@ function processData(data){
 //in case hastily implemented, I just want to add a note that all the places in this fxn that read "#map" used to read "#panel"
 //the vestiges are visible if reload OR if zoom way out. need to address (elimin8?) these before turning in
 function createSequenceControls(attributes){
-    //let's spawn a range input element (aka slider)
-    var slider = "<input class='range-slider' type='range'></input>";
-    document.querySelector("#map").insertAdjacentHTML('beforeend',slider);
-    //I only have 6 timestaps for now so max set to 5 instead of 6 as in example
-    document.querySelector('.range-slider').max = 5;
-    document.querySelector('.range-slider').min = 0;
-    document.querySelector('.range-slider').value = 0;
-    document.querySelector('.range-slider').step = 1;
-    //let's add some buttons!!!!!
-    document.querySelector('#map').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse (by Saepul Nahwan under CC)</button>');
-    document.querySelector('#map').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward (by Saepul Nahwan under CC)</button>');
-    // have to do the CC attribution
-    document.querySelector('#reverse').insertAdjacentHTML('beforeend','<img src="img/reverse.png">'); 
-    document.querySelector('#forward').insertAdjacentHTML('beforeend','<img src="img/forward.png">');
 
-    //Step 5: click listener for buttons  
-    /*
-    document.querySelectorAll('.step').forEach(function(step){
-        step.addEventListener("click", function(){
-            var index = document.querySelector('.range-slider').value;
-            
-            //increment or decrement depending on button clicked
-            if (step.id == 'forward'){
-                index++;
-                //Step 7: if past the last attribute, wrap around to first attribute
-                index = index > 5 ? 0 : index;
-            } else if (step.id == 'reverse'){
-                index--;
-                //Step 7: if past the first attribute, wrap around to last attribute
-                index = index < 0 ? 5 : index;
-            };
-
-            //update slider
-            document.querySelector('.range-slider').value = index; 
-
-            updatePropSymbols(attributes[index]);
-            
-        }) 
-    }) */
-    
-    //Step 5: input listener for slider (we love the slider tho!!!!)
-    document.querySelector('.range-slider').addEventListener('input', function(){            
-        var index = this.value;
-        
-        updatePropSymbols(attributes[index]);
-    });
     var SequenceControl = L.Control.extend({
         options: {
             position: 'bottomleft'
@@ -236,7 +191,6 @@ function updatePropSymbols(attribute){
     var year = attribute.split("_")[1];
     //update temporal legend
     document.querySelector("span.year").innerHTML = year;
-    
     
     map.eachLayer(function(layer){
         if (layer.feature){
