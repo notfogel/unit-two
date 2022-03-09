@@ -35,17 +35,19 @@
 
 .range-slider {
     width: 55%;
+    position: relative;
+    top: -40px;
 }
 
 .step {
 	width: 20%;
     position: relative;
-    top: -9.5px; 
+    top: -42.5px; 
 }
 
 .step img {
 	width: 90%;
-    height: 40px;
+    height: 35px;
 }
 
 
@@ -56,4 +58,8 @@
 #reverse {
     float: left;
 }
-
+#affordance {
+    position: relative;
+    top: 10px;
+    left: 85px;
+}

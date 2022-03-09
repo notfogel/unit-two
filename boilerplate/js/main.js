@@ -98,8 +98,6 @@ function createPropSymbols(data, attributes){
     
 };
 //this here fxn will create an array of the sequential attributez to keep track of their order
-//may have to reverse the order this fxn assigns later on, or maybe my map will just count years backwards idk both seem ok to me
-//or or or! I can just go directly into the csv and reverse the order! that seems way way easier than writing a reverse-loop. this is mostly just a note for future Sammy.
 function processData(data){
     //empty array to hold attributes
     var attributes = [];
@@ -114,24 +112,16 @@ function processData(data){
             attributes.push(attribute);
         };
     };
-
-    //check result
-    //console.log(attributes);
-
     return attributes;
 };
-
-
-//sequence ctls baby!!!
-//in case hastily implemented, I just want to add a note that all the places in this fxn that read "#map" used to read "#panel"
-//the vestiges are visible if reload OR if zoom way out. need to address (elimin8?) these before turning in
+//sequence ctrls baby!!!
 function createSequenceControls(attributes){
-
     var SequenceControl = L.Control.extend({
         options: {
-            position: 'bottomleft'
+            position: 'bottomleft',
+            content: "Toggle between years using the slider bar or the buttons"
         },
-        onAdd: function() {
+        onAdd: function() {            
             //create the control container div with a particular class namw
             var container = L.DomUtil.create('div', 'sequence-control-container');
             //create range input element (slider)
@@ -139,26 +129,22 @@ function createSequenceControls(attributes){
             //add skip buttons
             container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse (by Saepul Nahwan under CC) "><img src="img/reverse.png"></button>'); 
             container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward (by Saepul Nahwan under CC) "><img src="img/forward.png"></button>');
+            container.insertAdjacentHTML('afterbegin','<text id="affordance">Slide or Click Me to Toggle Years</text>');
             //disable any mouse event listeners for the container
             L.DomEvent.disableClickPropagation(container);
             //initialize other DOM elements
             return container;
         }
     });
-    map.addControl(new SequenceControl());  //add listenerz after adding control
-    
-    //more listenerz!! this shit should sequence! come on javascript, LISTEN and LEARN!!!
-    //ok so everything works fine EXCEPT the new slider bar doesn't make the data shift in the way the old one did
-    //BUT, when the reverse/forward buttons are clicked, the data does shift and the new slider bar along with it
-    //I think line 212 may be the key to this ("updatePropSymbols(attributes[index])")
-    //so this is something I'll have to figure out (or delete lol) but otherwise, doin alright and made it thru Lesson 2 stage II
+    map.addControl(new SequenceControl());  
+    //listenerz
     document.querySelector('.range-slider').max = 5;
     document.querySelector('.range-slider').min = 0;
     document.querySelector('.range-slider').value = 0;
     document.querySelector('.range-slider').step = 1;
 
     var steps = document.querySelectorAll('.step');
-
+    //this loop powers the slider and the buttons
     steps.forEach(function(step){
         step.addEventListener("click", function(){
             var index = document.querySelector('.range-slider').value;
