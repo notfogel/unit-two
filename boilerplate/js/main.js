@@ -114,6 +114,26 @@ function processData(data){
     };
     return attributes;
 };
+//I just want a title!!!!
+function createTitle(){
+    L.Control.textbox = L.Control.extend({
+		onAdd: function(map) {
+			
+		var title = L.DomUtil.create('div');
+		title.id = "my_title";
+		title.innerHTML = "<strong>Pieces of Anti-Trans Legislation Proposed by U.S. State, 2016-2022 <br> by Sammy Fogel</strong>"
+        
+		return title;
+		},
+        
+		onRemove: function(map) {
+			// Nothing to do here
+		}
+	});
+	L.control.textbox = function(opts) { return new L.Control.textbox(opts);}
+	L.control.textbox({ position: 'bottomleft' }).addTo(map);
+}
+
 //sequence ctrls baby!!!
 function createSequenceControls(attributes){
     var SequenceControl = L.Control.extend({
@@ -243,7 +263,6 @@ function createLegend(attributes){
         }
     });
     map.addControl(new LegendControl());
-
 };
 function PopupContent(properties, attribute){
     this.properties = properties;
@@ -266,6 +285,8 @@ function PopupContent(properties, attribute){
 
 
 function getData(){
+
+
     fetch("data/antitranslaws_15gap_17gap.geojson")
         .then(function(response){
             return response.json();
@@ -280,6 +301,7 @@ function getData(){
             createPropSymbols(json, attributes);
             createSequenceControls(attributes);
             createLegend(attributes);
+            createTitle();
         
     });  
 };
