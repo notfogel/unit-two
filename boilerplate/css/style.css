@@ -1,5 +1,5 @@
 #map {
-    width: 95%;        
+    width: 99%;        
     height: 550px;
     display: inline-block;
 }
@@ -12,9 +12,7 @@
     text-align: center;
     line-height: 42px;
 } */
-#Layer_1 {
-    color: aqua;
-}
+
 .sequence-control-container {  
     width: 350px;  
     height: 30px;  
@@ -25,7 +23,7 @@
     border: solid gray 1px;  
 }  
 .legend-control-container {  
-    width: 200px;  
+    width: 150px;  
     height: 200px;  
     background-color: rgba(255,255,255,0.8);  
     line-height: 35px;  

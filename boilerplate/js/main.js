@@ -267,7 +267,7 @@ function createLegend(attributes){
             container.innerHTML = '<p class="temporal-legend">Anti-Trans Legislation in  <span class="year">2022</span></p>';
           
             //svg time baby!!!
-            var svg = '<svg id="attribute-legend" width="160px" height="60px">';
+            var svg = '<svg id="attribute-legend" width="130px" height="130px">';
             
             //circle array time whewwwwww
             var circles = ["max", "mean", "min"];
@@ -275,11 +275,11 @@ function createLegend(attributes){
             for (var i=0; i<circles.length; i++){
                 //heeeere weeee goooo (about to grant form to these birbles..dynamically!)
                 var radius = calcPropRadius(dataStats[circles[i]]);
-                var cy = 59 - radius
+                var cy = 85 - radius
                 
                 //circle string
                 svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + 
-                '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="30"/>';              };            
+                '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="65"/>';              };            
             //now let's close that string!!!!
             svg += "</svg>";
             //and let's now lob all this attribute legend svg business into the container
