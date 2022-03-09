@@ -233,6 +233,11 @@ function createSequenceControls(attributes){
 
 //update the symbols as the index changes with the slideyguy
 function updatePropSymbols(attribute){
+    var year = attribute.split("_")[1];
+    //update temporal legend
+    document.querySelector("span.year").innerHTML = year;
+    
+    
     map.eachLayer(function(layer){
         if (layer.feature){
             //access feature properties
@@ -275,12 +280,22 @@ function createLegend(attributes){
             for (var i=0; i<circles.length; i++){
                 //heeeere weeee goooo (about to grant form to these birbles..dynamically!)
                 var radius = calcPropRadius(dataStats[circles[i]]);
+                var textContent = dataStats[circles[i]];
                 var cy = 85 - radius
                 
-                //circle string
+                //birble string
                 svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + 
-                '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="65"/>';              };            
-            //now let's close that string!!!!
+                '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="65"/>';                          
+            
+                //evenly space out labels
+                var textY = i * 20 + 20; //lol before even executing this I'm already suspicious of it
+
+                //text string
+                svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + textContent + " bills" + '</text>';
+           
+            }; //close the loop
+            
+                //now let's close that string!!!!
             svg += "</svg>";
             //and let's now lob all this attribute legend svg business into the container
             container.insertAdjacentHTML('beforeend',svg);
