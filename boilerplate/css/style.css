@@ -1,16 +1,17 @@
 #map {
-    width: 70%;        
-    height: 500px;
+    width: 95%;        
+    height: 550px;
     display: inline-block;
 }
+/*
 #panel {
-    width: 25%;
+    width: 1%;
     padding: 20px;
     display: inline-block;
     vertical-align: top;
     text-align: center;
     line-height: 42px;
-}
+} */
 #Layer_1 {
     color: aqua;
 }

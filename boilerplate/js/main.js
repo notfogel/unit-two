@@ -1,5 +1,8 @@
+//global var alert!!!!! weewoooo
 var map;
-var minValue = 1
+var minValue = 1 //I experiemented w/ commenting this out and it doesn't seem to need to exist but...leaving it for safekeeping
+var dataStats = {};
+
 
 function createMap(){
     //the creation of map
@@ -16,28 +19,34 @@ function createMap(){
     getData(map);
 };
 //creating a minValue fxn for proportional scaling 
-/* commenting this fxn out for now til I can get this loop to function bc 0-values are messing it up rn
-function calculateMinValue(data){
+//commenting this fxn out for now til I can get this loop to function bc 0-values are messing it up rn
+//ok so I'm diving back into this old friend(enemy) and it hasn't broken the map yet bc there's no uncommented reference to it :)
+function calcStats(data){
     //creation of empty array for to store all data valuez
     var allValues = [];
-    //a loop, which loops thru each uh oh I don't have any cities in here let's hope my state_unit is equivalent
+    //a loop, which loops thru each uh oh I hope this loop specific to my data I wrote 2 week ago that never got tested actually works
     for(var state of data.features){
         //loop thru each year hooo boy let's get it
-        for(var year = 2016; year <= 2022; year+=1){
+        for(var year = 2022; year >= 2016; year-=1){
             //get num_bills for current year
-            var value = state.properties["num_bills_"+ String(year)];
+            var value = state.properties["bills_"+ String(year)];
             //since i'm missing data for 2017 i had to write a brief conditional so the loop keeps moving
             if(year === 2017) { continue; }
             //add value to array
             allValues.push(value);
         }
     }
-    console.log(allValues);
-    //get min value of our array
-    var minValue = Math.min(...allValues)
-    console.log(minValue)
-    return minValue;
-} */
+    console.log(dataStats);
+    //min,max,mean stats for our array
+    //dataStats.min = Math.min(...allValues); //discarding the real min (at least for now) bc it's equal to 0
+    dataStats.min = 1 
+    //although I guess the dataStats var isn't being used anywhere yet
+    dataStats.max = Math.max(...allValues);
+    //calculate meanValue
+    var sum = allValues.reduce(function(a, b){return a+b;});
+    dataStats.mean = sum/ allValues.length;
+    
+}
 
 //now it's time to calculate the radius of each and every proportional symbol
 function calcPropRadius(attValue){
@@ -107,25 +116,27 @@ function processData(data){
     };
 
     //check result
-    console.log(attributes);
+    //console.log(attributes);
 
     return attributes;
 };
 
 
 //sequence ctls baby!!!
+//in case hastily implemented, I just want to add a note that all the places in this fxn that read "#map" used to read "#panel"
+//the vestiges are visible if reload OR if zoom way out. need to address (elimin8?) these before turning in
 function createSequenceControls(attributes){
     //let's spawn a range input element (aka slider)
     var slider = "<input class='range-slider' type='range'></input>";
-    document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
+    document.querySelector("#map").insertAdjacentHTML('beforeend',slider);
     //I only have 6 timestaps for now so max set to 5 instead of 6 as in example
     document.querySelector('.range-slider').max = 5;
     document.querySelector('.range-slider').min = 0;
     document.querySelector('.range-slider').value = 0;
     document.querySelector('.range-slider').step = 1;
     //let's add some buttons!!!!!
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse (by Saepul Nahwan under CC)</button>');
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward (by Saepul Nahwan under CC)</button>');
+    document.querySelector('#map').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse (by Saepul Nahwan under CC)</button>');
+    document.querySelector('#map').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward (by Saepul Nahwan under CC)</button>');
     // have to do the CC attribution
     document.querySelector('#reverse').insertAdjacentHTML('beforeend','<img src="img/reverse.png">'); 
     document.querySelector('#forward').insertAdjacentHTML('beforeend','<img src="img/forward.png">');
@@ -243,7 +254,7 @@ function updatePropSymbols(attribute){
     }); 
 
 };
-//creating a temporal legend!
+//creating a legend!
 function createLegend(attributes){
     var LegendControl = L.Control.extend({
         options: {
@@ -256,11 +267,26 @@ function createLegend(attributes){
             container.innerHTML = '<p class="temporal-legend">Anti-Trans Legislation in  <span class="year">2022</span></p>';
           
             //svg time baby!!!
-            var svg = '<svg id="attribute-legend" width="130px" height="130px">';
-            //add svg to container
-            container.innerHTML += svg;
-            //this line below actually CREATES the darn thing (in theory) */
-            return container;
+            var svg = '<svg id="attribute-legend" width="160px" height="60px">';
+            
+            //circle array time whewwwwww
+            var circles = ["max", "mean", "min"];
+            //presenting...a loop! a loop which, if successful, will add each circle and text to our svg string!!! mwahahahaha you're too late Batman!!!!
+            for (var i=0; i<circles.length; i++){
+                //heeeere weeee goooo (about to grant form to these birbles..dynamically!)
+                var radius = calcPropRadius(dataStats[circles[i]]);
+                var cy = 59 - radius
+                
+                //circle string
+                svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + 
+                '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="30"/>';              };            
+            //now let's close that string!!!!
+            svg += "</svg>";
+            //and let's now lob all this attribute legend svg business into the container
+            container.insertAdjacentHTML('beforeend',svg);
+
+            //this line below actually CREATES the darn thing (in theory) 
+            return container; 
         }
     });
     map.addControl(new LegendControl());
@@ -291,18 +317,18 @@ function getData(){
         .then(function(response){
             return response.json();
     })
-    .then(function(json){
+        .then(function(json){
         //doin some attribute stuff with arrays or something
-        var attributes = processData(json);
-        
+            var attributes = processData(json);
         //calculate minimum data value (not yet tho since loop still bunk)
-        //minValue = calculateMinValue(json);
-        minValue = 1;
+            calcStats(json)
+            //minValue = 1; //commenting this out for now bc what if I need it later??? I probably won't but,,,hoarder instinct, sorry 
         //call that fxn and create those proportional symbolz!
-        createPropSymbols(json, attributes);
-        createSequenceControls(attributes);
-        createLegend(attributes);
-    })        
+            createPropSymbols(json, attributes);
+            createSequenceControls(attributes);
+            createLegend(attributes);
+        
+    });  
 };
 //the line below this one activates all the stuff above this line once the DOM hath loaded
 document.addEventListener('DOMContentLoaded',createMap)
