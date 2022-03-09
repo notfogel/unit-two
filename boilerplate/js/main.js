@@ -209,7 +209,7 @@ function createLegend(attributes){
             //cre8 control container w/ a particular clasz name
             var container = L.DomUtil.create('div', 'legend-control-container');
             
-            container.innerHTML = '<p class="temporal-legend">Anti-Trans Legislation in  <span class="year">2022</span></p>';
+            container.innerHTML = '<p class="temporal-legend">Number of Anti-Trans Bills in  <span class="year">2022</span></p>';
           
             //svg time baby!!!
             var svg = '<svg id="attribute-legend" width="130px" height="130px">';
@@ -222,20 +222,18 @@ function createLegend(attributes){
                 var radius = calcPropRadius(dataStats[circles[i]]);
                 var textContent = dataStats[circles[i]];
                 var cy = 85 - radius
-                
+                if(i === 2) { continue; }                
                 //birble string
                 svg += '<circle class="legend-circle" id="' + circles[i] + '" r="' + radius + 
-                '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="65"/>';                          
+                '"cy="' + cy + '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="45"/>';                          
             
                 //evenly space out labels
-                var textY = i * 20 + 20; //lol before even executing this I'm already suspicious of it
-
+                var textY = i * 65 + 20; //lol before even executing this I'm already suspicious of it
                 //text string
-                svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + textContent + " bills" + '</text>';
-           
-            }; //close the loop
-            
-                //now let's close that string!!!!
+                svg += '<text id="' + circles[i] + '-text" x="65" y="' + textY + '">' + "&emsp;" + "&emsp;" + textContent + '</text>';
+                
+            }; //close the loop 
+            //now let's close that string!!!!
             svg += "</svg>";
             //and let's now lob all this attribute legend svg business into the container
             container.insertAdjacentHTML('beforeend',svg);
