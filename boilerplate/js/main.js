@@ -255,6 +255,10 @@ function createLegend(attributes){
             
             container.innerHTML = '<p class="temporal-legend">Anti-Trans Legislation in  <span class="year">2022</span></p>';
           
+            //svg time baby!!!
+            var svg = '<svg id="attribute-legend" width="130px" height="130px">';
+            //add svg to container
+            container.innerHTML += svg;
             //this line below actually CREATES the darn thing (in theory) */
             return container;
         }
